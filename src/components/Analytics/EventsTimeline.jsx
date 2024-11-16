@@ -1,8 +1,14 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Paper, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 
-const EventsTimeline = () => {
-  const events = [/* events data */];
+const EventsTimeline = ({ poolId }) => {
+  const [events, setEvents] = useState([]);
+
+  useEffect(() => {
+    // Fetch events data based on poolId
+    // Example:
+    // setEvents(fetchEventsData(poolId));
+  }, [poolId]);
 
   return (
     <Paper sx={{ padding: '20px', marginBottom: '40px' }}>

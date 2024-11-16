@@ -1,9 +1,15 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Paper, Typography } from '@mui/material';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer, Brush } from 'recharts';
 
-const LiquidityChart = () => {
-  const data = [/* liquidity data */];
+const LiquidityChart = ({ poolId }) => {
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    // Fetch liquidity data based on poolId
+    // Example:
+    // setData(fetchLiquidityData(poolId));
+  }, [poolId]);
 
   return (
     <Paper sx={{ padding: '20px', marginBottom: '40px' }}>
@@ -16,8 +22,8 @@ const LiquidityChart = () => {
           <XAxis dataKey="timestamp" />
           <YAxis />
           <Tooltip />
-          <Area type="monotone" dataKey="liquidity" stroke="#82ca9d" fill="#82ca9d" />
-          <Brush dataKey="timestamp" height={30} stroke="#82ca9d" />
+          <Area type="monotone" dataKey="liquidity" stroke="#8884d8" fill="#8884d8" fillOpacity={0.3} />
+          <Brush dataKey="timestamp" height={30} stroke="#8884d8" />
         </AreaChart>
       </ResponsiveContainer>
     </Paper>

@@ -1,9 +1,15 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Paper, Typography } from '@mui/material';
 import { LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer, Brush } from 'recharts';
 
-const PriceChart = () => {
-  const data = [/* price data */];
+const PriceChart = ({ poolId }) => {
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    // Fetch price data based on poolId
+    // Example:
+    // setData(fetchPriceData(poolId));
+  }, [poolId]);
 
   return (
     <Paper sx={{ padding: '20px', marginBottom: '40px' }}>

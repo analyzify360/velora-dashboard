@@ -1,9 +1,15 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Paper, Typography } from '@mui/material';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer, Brush } from 'recharts';
 
-const VolumeChart = () => {
-  const data = [/* volume data */];
+const VolumeChart = ({ poolId }) => {
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    // Fetch volume data based on poolId
+    // Example:
+    // setData(fetchVolumeData(poolId));
+  }, [poolId]);
 
   return (
     <Paper sx={{ padding: '20px', marginBottom: '40px' }}>
