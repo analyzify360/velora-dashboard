@@ -6,6 +6,7 @@ import HomePage from './pages/HomePage';
 import PoolsPage from './pages/PoolsPage';
 import AnalyticsPage from './pages/AnalyticsPage';
 import Layout from './components/Layout/Layout';
+import PredictionsPage from './pages/PredictionsPage';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/pools" element={<PoolsPage />} />
           <Route path="/analytics" element={<AnalyticsPage />} />
+          <Route path="/predictions" element={<PredictionsPage />} />
         </Routes>
       </Layout>
     </Router>
