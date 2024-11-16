@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Container, Typography, Grid } from '@mui/material';
-import PoolsTable from '../components/pools/PoolsTable';
+import PoolsTable from '../components/Pools/PoolsTable';
 import TopPoolsHighlights from '../components/Pools/TopPoolsHighlights';
 
 const PoolsPage = () => {
