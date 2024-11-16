@@ -1,10 +1,17 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Paper, Typography } from '@mui/material';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer, Brush } from 'recharts';
 
-const VolumePrediction = () => {
-  const historicalData = [/* historical volume data */];
-  const predictedData = [/* predicted volume data */];
+const VolumePrediction = ({ poolId }) => {
+  const [historicalData, setHistoricalData] = useState([]);
+  const [predictedData, setPredictedData] = useState([]);
+
+  useEffect(() => {
+    // Fetch historical and predicted volume data based on poolId
+    // Example:
+    // setHistoricalData(fetchHistoricalVolumeData(poolId));
+    // setPredictedData(fetchPredictedVolumeData(poolId));
+  }, [poolId]);
 
   return (
     <Paper sx={{ padding: '20px', marginBottom: '40px' }}>
