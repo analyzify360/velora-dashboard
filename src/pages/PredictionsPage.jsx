@@ -1,17 +1,17 @@
-import React, { useState } from 'react';
-import { Container, Typography, Grid, FormControl, InputLabel, Select, MenuItem, Paper } from '@mui/material';
-import PredictionOverview from '../components/predictions/PredictionOverview';
-import PricePrediction from '../components/predictions/PricePrediction';
-import LiquidityPrediction from '../components/predictions/LiquidityPrediction';
-import VolumePrediction from '../components/predictions/VolumePrediction';
-import ModelInsights from '../components/predictions/ModelInsights';
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { Container, Typography, Grid, Paper, TextField } from '@mui/material';
+import { Autocomplete } from '@mui/lab';
+import PredictionOverview from '../components/Predictions/PredictionOverview';
+import PricePrediction from '../components/Predictions/PricePrediction';
+import LiquidityPrediction from '../components/Predictions/LiquidityPrediction';
+import VolumePrediction from '../components/Predictions/VolumePrediction';
+import ModelInsights from '../components/Predictions/ModelInsights';
 
 const PredictionsPage = () => {
-  const [selectedPool, setSelectedPool] = useState('');
-
-  const handlePoolChange = (event) => {
-    setSelectedPool(event.target.value);
-  };
+  const { poolId } = useParams();
+  const navigate = useNavigate();
+  const [selectedPool, setSelectedPool] = useState(null);
 
   const pools = [
     { name: 'USDC/ETH', id: 'usdc-eth' },
@@ -19,33 +19,47 @@ const PredictionsPage = () => {
     // Add more pools as needed
   ];
 
+  useEffect(() => {
+    if (poolId) {
+      const pool = pools.find((p) => p.id === poolId);
+      setSelectedPool(pool);
+    }
+  }, [poolId]);
+
+  const handlePoolChange = (event, value) => {
+    setSelectedPool(value);
+    if (value) {
+      navigate(`/predictions/${value.id}`);
+    } else {
+      navigate('/predictions');
+    }
+  };
+
   return (
     <Container sx={{ padding: '20px' }}>
       <Typography variant="h4" gutterBottom>
         Predictions Dashboard
       </Typography>
-      <FormControl fullWidth sx={{ marginBottom: '20px' }}>
-        <InputLabel>Select Pool</InputLabel>
-        <Select value={selectedPool} onChange={handlePoolChange} label="Select Pool">
-          {pools.map((pool) => (
-            <MenuItem key={pool.id} value={pool.id}>
-              {pool.name}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
+      <Autocomplete
+        options={pools}
+        getOptionLabel={(option) => option.name}
+        value={selectedPool}
+        onChange={handlePoolChange}
+        renderInput={(params) => <TextField {...params} label="Select Pool" variant="outlined" fullWidth />}
+        sx={{ marginBottom: '20px' }}
+      />
       {selectedPool ? (
         <>
           <PredictionOverview />
           <Grid container spacing={4}>
             <Grid item xs={12}>
-              <PricePrediction poolId={selectedPool} />
+              <PricePrediction poolId={selectedPool.id} />
             </Grid>
             <Grid item xs={12}>
-              <LiquidityPrediction poolId={selectedPool} />
+              <LiquidityPrediction poolId={selectedPool.id} />
             </Grid>
             <Grid item xs={12}>
-              <VolumePrediction poolId={selectedPool} />
+              <VolumePrediction poolId={selectedPool.id} />
             </Grid>
           </Grid>
           <ModelInsights />

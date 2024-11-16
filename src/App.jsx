@@ -16,7 +16,7 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/pools" element={<PoolsPage />} />
           <Route path="/analytics" element={<AnalyticsPage />} />
-          <Route path="/predictions" element={<PredictionsPage />} />
+          <Route path="/predictions/:poolId?" element={<PredictionsPage />} />
         </Routes>
       </Layout>
     </Router>
