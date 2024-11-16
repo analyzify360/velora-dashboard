@@ -1,10 +1,17 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Paper, Typography } from '@mui/material';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer, Brush } from 'recharts';
 
-const LiquidityPrediction = () => {
-  const historicalData = [/* historical liquidity data */];
-  const predictedData = [/* predicted liquidity data */];
+const LiquidityPrediction = ({ poolId }) => {
+  const [historicalData, setHistoricalData] = useState([]);
+  const [predictedData, setPredictedData] = useState([]);
+
+  useEffect(() => {
+    // Fetch historical and predicted liquidity data based on poolId
+    // Example:
+    // setHistoricalData(fetchHistoricalLiquidityData(poolId));
+    // setPredictedData(fetchPredictedLiquidityData(poolId));
+  }, [poolId]);
 
   return (
     <Paper sx={{ padding: '20px', marginBottom: '40px' }}>

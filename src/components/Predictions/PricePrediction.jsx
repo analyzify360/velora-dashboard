@@ -1,10 +1,17 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Paper, Typography } from '@mui/material';
 import { LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer, Brush, Area } from 'recharts';
 
-const PricePrediction = () => {
-  const historicalData = [/* historical price data */];
-  const predictedData = [/* predicted price data */];
+const PricePrediction = ({ poolId }) => {
+  const [historicalData, setHistoricalData] = useState([]);
+  const [predictedData, setPredictedData] = useState([]);
+
+  useEffect(() => {
+    // Fetch historical and predicted price data based on poolId
+    // Example:
+    // setHistoricalData(fetchHistoricalPriceData(poolId));
+    // setPredictedData(fetchPredictedPriceData(poolId));
+  }, [poolId]);
 
   return (
     <Paper sx={{ padding: '20px', marginBottom: '40px' }}>
