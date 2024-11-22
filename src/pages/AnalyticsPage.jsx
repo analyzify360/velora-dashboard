@@ -72,20 +72,20 @@ const AnalyticsPage = () => {
       />
       {selectedPool ? (
         <>
-          <KeyMetricsSummary poolId={selectedPool.id} />
+          <KeyMetricsSummary poolAddress={selectedPool.pool} />
           <Grid container spacing={4}>
             <Grid item xs={12} md={6}>
-              <PriceChart poolId={selectedPool.id} />
+              <PriceChart poolAddress={selectedPool.pool} />
             </Grid>
             <Grid item xs={12} md={6}>
-              <LiquidityChart poolId={selectedPool.id} />
+              <LiquidityChart poolAddress={selectedPool.pool} />
             </Grid>
             <Grid item xs={12}>
-              <VolumeChart poolId={selectedPool.id} />
+              <VolumeChart poolAddress={selectedPool.pool} />
             </Grid>
           </Grid>
-          <EventsTimeline poolId={selectedPool.id} />
-          <ComparisonsAndCorrelations poolId={selectedPool.id} />
+          <EventsTimeline poolAddress={selectedPool.pool} />
+          <ComparisonsAndCorrelations poolAddress={selectedPool.pool} />
         </>
       ) : (
         <Paper sx={{ padding: '20px', textAlign: 'center' }}>
