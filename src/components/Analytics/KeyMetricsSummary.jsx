@@ -17,9 +17,6 @@ const KeyMetricsSummary = ({ poolId }) => {
 
   return (
     <Paper sx={{ padding: '20px', marginBottom: '40px' }}>
-      <Typography variant="h5" gutterBottom>
-        Key Metrics Summary
-      </Typography>
       <Grid container spacing={2}>
         <Grid item xs={12} sm={4}>
           <Paper sx={{ padding: '10px', textAlign: 'center' }}>

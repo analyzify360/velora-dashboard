@@ -16,6 +16,7 @@ const AnalyticsPage = () => {
   const [selectedPool, setSelectedPool] = useState(null);
   const [pools, setPools] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [signals, setSignals] = useState([]);
 
   useEffect(() => {
     fetchPools();
@@ -74,14 +75,14 @@ const AnalyticsPage = () => {
         <>
           <KeyMetricsSummary poolAddress={selectedPool.pool} />
           <Grid container spacing={4}>
-            <Grid item xs={12} md={6}>
-              <PriceChart poolAddress={selectedPool.pool} />
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <LiquidityChart poolAddress={selectedPool.pool} />
+            <Grid item xs={12}>
+              <PriceChart poolAddress={poolAddress}/>
             </Grid>
             <Grid item xs={12}>
-              <VolumeChart poolAddress={selectedPool.pool} />
+              <LiquidityChart poolAddress={poolAddress} />
+            </Grid>
+            <Grid item xs={12}>
+              <VolumeChart poolAddress={poolAddress} />
             </Grid>
           </Grid>
           <EventsTimeline poolAddress={selectedPool.pool} />
