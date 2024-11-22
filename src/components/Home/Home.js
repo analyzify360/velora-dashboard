@@ -3,7 +3,7 @@ import axios from 'axios';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import PoolList from './PoolList';
 
-const InfiniteScrollPools = ({onDetailClick}) => {
+const HomePools = () => {
   const [pools, setPools] = useState([]);
   const [hasMore, setHasMore] = useState(true);
   const [page, setPage] = useState(1);
@@ -13,7 +13,6 @@ const InfiniteScrollPools = ({onDetailClick}) => {
     if (!hasMore) return;
 
     try {
-      console.log('Fetching pools12312...');
       const response = await axios.get(`http://localhost:8000/api/pools?page=${page}`);
       setPools((prevPools) => [...prevPools, ...response.data]);
       setHasMore(response.data.length > 0);
@@ -40,9 +39,9 @@ const InfiniteScrollPools = ({onDetailClick}) => {
       loader={<h4>Loading...</h4>}
       endMessage={<p>No more pools</p>}
     >
-      <PoolList pools={pools} onDetailClick={onDetailClick} />
+      <PoolList pools={pools} />
     </InfiniteScroll>
   );
 };
 
-export default InfiniteScrollPools;
+export default HomePools;

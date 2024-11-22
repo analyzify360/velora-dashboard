@@ -32,14 +32,32 @@
   padding: 20px;
 }
 
-.pool-item {
-  background-color: #1a1a1a;
-  padding: 20px;
-  margin: 10px 0;
-  color: white;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.pool-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-gap: 20px;
+}
+
+.pool-table {
+  min-width: 800px; /* Adjust the width as needed */
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.pool-table th,
+.pool-table td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: left;
+}
+
+.pool-table .token-pair:hover {
+  cursor: pointer;
+  background-color: #f4f4f4;
+}
+
+.pool-table th {
+  background-color: #f4f4f4;
 }
 
 .pool-info h3 {
@@ -57,6 +75,75 @@
   padding: 10px;
   margin-left: 10px;
   cursor: pointer;
+}
+
+.pool-details {
+  display: flex;
+}
+
+.pool-details-sidebar {
+  flex: 0 0 300px;
+  background-color: #f4f4f4;
+  padding: 20px;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.pool-details-content {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.pool-details-sidebar button {
+  background-color: 'transparent';
+  border: 'none';
+  outline: 'none';
+  padding: '5px';
+}
+
+.pool-details-sidebar button:hover {
+  background-color: '#f4f4f4';
+  cursor: pointer;
+}
+
+.pool-details-sidebar icon {
+  font-size: '24px';
+  color: '#6c757d';
+}
+
+.event-table {
+  min-width: 800px; /* Adjust the width as needed */
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.event-table th,
+.event-table td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: left;
+}
+
+.event-table th {
+  background-color: #f4f4f4;
+}
+
+#eventScrollableDiv {
+  scrollbar-width: thin;
+  scrollbar-color: #888 #f4f4f4;
+}
+
+#eventScrollableDiv::-webkit-scrollbar {
+  height: 8px;
+}
+
+#eventScrollableDiv::-webkit-scrollbar-thumb {
+  background-color: #888;
+  border-radius: 10px;
+}
+
+#eventScrollableDiv::-webkit-scrollbar-track {
+  background-color: #f4f4f4;
 }
 
 @keyframes App-logo-spin {
