@@ -8,33 +8,52 @@ import LiquidityChart from '../components/Analytics/LiquidityChart';
 import VolumeChart from '../components/Analytics/VolumeChart';
 import EventsTimeline from '../components/Analytics/EventsTimeline';
 import ComparisonsAndCorrelations from '../components/Analytics/ComparisonsAndCorrelations';
+import axios from 'axios';
 
 const AnalyticsPage = () => {
-  const { poolId } = useParams();
+  const { poolAddress } = useParams();
   const navigate = useNavigate();
   const [selectedPool, setSelectedPool] = useState(null);
-
-  const pools = [
-    { name: 'USDC/ETH', id: 'usdc-eth' },
-    { name: 'DAI/ETH', id: 'dai-eth' },
-    // Add more pools as needed
-  ];
+  const [pools, setPools] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
-    if (poolId) {
-      const pool = pools.find((p) => p.id === poolId);
-      setSelectedPool(pool);
+    fetchPools();
+  }, [searchQuery, poolAddress]);
+
+  useEffect(() => {
+    if (selectedPool) {
+      navigate(`/analytics/${selectedPool.pool}`);
+      setSearchQuery(`${selectedPool.token0_symbol} / ${selectedPool.token1_symbol} - ${selectedPool.fee}`);
+    } else {
+      navigate('/analytics');
+      setSearchQuery('')
     }
-  }, [poolId]);
+  }, [selectedPool]);
+
+  const fetchPools = async () => {
+    if (poolAddress) {
+      const response = await axios.get(`http://localhost:8000/api/pools?search=${poolAddress}`);
+      const data = response.data;
+      setPools(data.pools);
+      const pool = data.pools.find((p) => p.pool === poolAddress);
+      setSelectedPool(pool);
+    } else {
+      const response = await axios.get(`http://localhost:8000/api/pools?page=1&page_limit=10&search=${searchQuery}`);
+      const data = response.data;
+      setPools(data.pools);
+    }
+  };
 
   const handlePoolChange = (event, value) => {
     setSelectedPool(value);
-    if (value) {
-      navigate(`/analytics/${value.id}`);
-    } else {
-      navigate('/analytics');
-    }
   };
+
+  const handleInputChange = (event, newInputValue, reason) => {
+    if (reason === 'input') {
+      setSearchQuery(newInputValue);
+    }
+  }
 
   return (
     <Container sx={{ padding: '20px' }}>
@@ -43,9 +62,11 @@ const AnalyticsPage = () => {
       </Typography>
       <Autocomplete
         options={pools}
-        getOptionLabel={(option) => option.name}
+        getOptionLabel={(option) => `${option.token0_symbol}  / ${option.token1_symbol} - ${option.fee}`}
         value={selectedPool}
         onChange={handlePoolChange}
+        inputValue={searchQuery}
+        onInputChange={handleInputChange}
         renderInput={(params) => <TextField {...params} label="Select Pool" variant="outlined" fullWidth />}
         sx={{ marginBottom: '20px' }}
       />
