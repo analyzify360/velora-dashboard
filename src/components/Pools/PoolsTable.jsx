@@ -22,8 +22,7 @@ const PoolsTable = () => {
   
 
   const fetchPools = async (page, rowsPerPage) => {
-    
-    const response = await axios.get(`http://localhost:8000/api/pools?page=${page + 1}&page_limit=${rowsPerPage}&search=${search}&fee_tier=${feeTier}&liquidity_threshold=${liquidityThreshold}&volume_threshold=${volumeThreshold}&sort_field=${sortField}`);
+    const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/api/pools?page=${page + 1}&page_limit=${rowsPerPage}&search=${search}&fee_tier=${feeTier}&liquidity_threshold=${liquidityThreshold}&volume_threshold=${volumeThreshold}&sort_field=${sortField}`);
     const data = response.data;
     setPools(data.pools);
     setTotalPools(data.total);
