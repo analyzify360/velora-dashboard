@@ -1,7 +1,22 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import { Paper, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Button } from '@mui/material';
+import axios from 'axios';
+
 
 const TopPoolsSnapshot = () => {
+
+  const [pools, setPools] = useState([]);
+
+  useEffect(() => {
+    getTopPools();
+  }, []);
+
+  const getTopPools = async () => {
+    const response = await axios.get('http://localhost:8000/api/pools?page=1&page_limit=5&sort_field=volume');
+    const data = response.data;
+    setPools(data.pools);
+  }
+
   return (
     <Paper sx={{ padding: '20px', marginBottom: '40px' }}>
       <Typography variant="h5" gutterBottom>

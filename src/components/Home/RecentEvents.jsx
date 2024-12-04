@@ -1,7 +1,20 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import { Paper, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Button } from '@mui/material';
+import axios from 'axios';
 
 const RecentEvents = () => {
+
+  const [events, setEvents] = useState([]);
+
+  useEffect(() => {
+    getRecentEvents();
+  }, []);
+
+  const getRecentEvents = async () => {
+    const response = await axios.get('http://localhost:8000/api/events?page=1&page_limit=5&sort_field=timestamp');
+    const data = response.data;
+    setEvents(data.events);
+  }
   return (
     <Paper sx={{ padding: '20px', marginBottom: '40px' }}>
       <Typography variant="h5" gutterBottom>
