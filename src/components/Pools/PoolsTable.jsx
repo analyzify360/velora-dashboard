@@ -104,23 +104,25 @@ const PoolsTable = () => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell><Typography fontWeight="bold">Pool Name</Typography></TableCell>
-              <TableCell><Typography fontWeight="bold">Fee Tier</Typography></TableCell>
+              <TableCell><Typography fontWeight="bold">#</Typography></TableCell>
+              <TableCell><Typography fontWeight="bold">Pool</Typography></TableCell>
+              <TableCell><Typography fontWeight="bold">TVL</Typography></TableCell>
               <TableCell><Typography fontWeight="bold">Liquidity</Typography></TableCell>
-              <TableCell><Typography fontWeight="bold">Volume (24h)</Typography></TableCell>
-              <TableCell><Typography fontWeight="bold">Number of Events (24h)</Typography></TableCell>
-              <TableCell><Typography fontWeight="bold">Price Range</Typography></TableCell>
+              <TableCell><Typography fontWeight="bold">1D Vol</Typography></TableCell>
+              <TableCell><Typography fontWeight="bold">3D Vol</Typography></TableCell>
+              <TableCell><Typography fontWeight="bold">1D vol/TVL</Typography></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {pools.map((pool, index) => (
               <TableRow key={index} onClick={() => navigate(`/analytics/${pool.pool}`)}>
-                <TableCell>{pool.token0_symbol} / {pool.token1_symbol}</TableCell>
+                <TableCell>{index + 1}</TableCell>
+                <TableCell>{pool.token0_symbol} / {pool.token1_symbol} {pool.fee}</TableCell>
                 <TableCell>{pool.fee}</TableCell>
                 <TableCell>{pool.liquidity}</TableCell>
-                <TableCell>{pool.volume_24h}</TableCell>
-                <TableCell>{pool.events_count_24h}</TableCell>
-                <TableCell>{pool.price_range_24h}</TableCell>
+                <TableCell>{pool.oneday_volume}</TableCell>
+                <TableCell>{pool.thirtyday_volume}</TableCell>
+                <TableCell>{pool.oneday_ratio}</TableCell>
               </TableRow>
             ))}
           </TableBody>
