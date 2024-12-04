@@ -11,20 +11,24 @@ const TopPoolsSnapshot = () => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Pool Name</TableCell>
-              <TableCell>Current Price</TableCell>
+              <TableCell>#</TableCell>
+              <TableCell>Pool</TableCell>
+              <TableCell>TVL</TableCell>
               <TableCell>Liquidity</TableCell>
-              <TableCell>Volume (24h)</TableCell>
-              <TableCell>Number of Events</TableCell>
+              <TableCell>1D Vol</TableCell>
+              <TableCell>30D Vol</TableCell>
+              <TableCell>1D vol/TVL</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             <TableRow>
-              <TableCell>USDC/ETH</TableCell>
-              <TableCell>$1.00</TableCell>
+              <TableCell>1</TableCell>
+              <TableCell>USDC/ETH v3 0.1%</TableCell>
+              <TableCell>$1,992,000</TableCell>
               <TableCell>$1,000,000</TableCell>
               <TableCell>$100,000</TableCell>
-              <TableCell>50</TableCell>
+              <TableCell>$3,000,000</TableCell>
+              <TableCell>0.2</TableCell>
             </TableRow>
             {/* Add more rows as needed */}
           </TableBody>
