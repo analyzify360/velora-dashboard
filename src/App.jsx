@@ -9,6 +9,7 @@ import AnalyticsPage from './pages/AnalyticsPage';
 import Layout from './components/Layout/Layout';
 import PredictionsPage from './pages/PredictionsPage';
 import APIDocsPage from './pages/APIDocsPage';
+import About from './pages/About';
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
           <Route path="/analytics/:poolAddress?" element={<AnalyticsPage />} />
           <Route path="/predictions/:poolAddress?" element={<PredictionsPage />} />
           <Route path="/api-docs" element={<APIDocsPage/>}/>
+          <Route path="/about" element={<About/>}/>
         </Routes>
       </Layout>
     </Router>
