@@ -5,15 +5,16 @@ import axios from 'axios';
 const RecentEvents = () => {
 
   const [events, setEvents] = useState([]);
+  const [filter, setFilter] = useState('all');
 
   useEffect(() => {
     getRecentEvents();
-  }, []);
+  }, [filter]);
 
   const getRecentEvents = async () => {
-    const response = await axios.get('http://localhost:8000/api/events?page=1&page_limit=5&sort_field=timestamp');
+    const response = await axios.get(`http://localhost:8000/recent-pool-event?page_limit=10&filter_by=${filter}`);
     const data = response.data;
-    setEvents(data.events);
+    setEvents(data);
   }
   return (
     <Paper sx={{ padding: '20px', marginBottom: '40px' }}>
@@ -21,15 +22,16 @@ const RecentEvents = () => {
         Recent Events
       </Typography>
       <div className="event-filters" sx={{ marginBottom: '10px' }}>
-        <Button variant="outlined" sx={{ marginRight: '10px' }}>All</Button>
-        <Button variant="outlined" sx={{ marginRight: '10px' }}>Swaps</Button>
-        <Button variant="outlined" sx={{ marginRight: '10px' }}>Mints</Button>
-        <Button variant="outlined">Burns</Button>
+        <Button variant="outlined" sx={{ marginRight: '10px' }} onClick={() => { setFilter('all')}}>All</Button>
+        <Button variant="outlined" sx={{ marginRight: '10px' }} onClick={() => { setFilter('swap')}}>Swaps</Button>
+        <Button variant="outlined" sx={{ marginRight: '10px' }} onClick={() => { setFilter('mint')}}>Mints</Button>
+        <Button variant="outlined" onClick={() => { setFilter('burn')}}>Burns</Button>
       </div>
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
             <TableRow>
+              <TableCell>#</TableCell>
               <TableCell>Timestamp</TableCell>
               <TableCell>Pool</TableCell>
               <TableCell>Event Type</TableCell>
@@ -37,13 +39,15 @@ const RecentEvents = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            <TableRow>
-              <TableCell>2023-01-01 12:00:00</TableCell>
-              <TableCell>USDC/ETH</TableCell>
-              <TableCell>Swap</TableCell>
-              <TableCell>100 USDC for 0.1 ETH</TableCell>
-            </TableRow>
-            {/* Add more rows as needed */}
+            {events.map((event, index) => (
+              <TableRow key={index}>
+                <TableCell>{index + 1}</TableCell>
+                <TableCell>{event.timestamp}</TableCell>
+                <TableCell>{event.token0_symbol} / {event.token1_symbol}</TableCell>
+                <TableCell>{event.event_type}</TableCell>
+                <TableCell>{event.amount0.toFixed(2)} / {event.amount1.toFixed(2)}</TableCell>
+              </TableRow>
+            ))}
           </TableBody>
         </Table>
       </TableContainer>

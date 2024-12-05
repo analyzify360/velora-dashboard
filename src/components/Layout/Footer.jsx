@@ -1,10 +1,11 @@
 import React from 'react';
-import { IconButton, Typography, Box } from '@mui/material';
-import { Twitter, Telegram, Discord } from '@mui/icons-material';
+import { IconButton, Typography, Box, SvgIcon } from '@mui/material';
+import { Twitter, Telegram } from '@mui/icons-material';
+import { ReactComponent as DiscordIcon } from '../../logo.svg'; // Adjust the path as needed
 
 const Footer = () => {
   return (
-    <footer style={{ padding: '20px', textAlign: 'center', backgroundColor: '#f4f4f4' }}>
+    <footer style={{ padding: '20px', textAlign: 'center', backgroundColor: '#333' }}>
       <Typography variant="body1" gutterBottom>
         &copy; 2024 Nestlest
       </Typography>
@@ -34,7 +35,7 @@ const Footer = () => {
           rel="noopener noreferrer"
           aria-label="Discord"
         >
-          <Discord />
+          <SvgIcon component={DiscordIcon} />
         </IconButton>
       </Box>
     </footer>
