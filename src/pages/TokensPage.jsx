@@ -7,7 +7,7 @@ const TokensPage = () => {
     return (
         <Container sx={{ padding: '20px' }}>
             <TopTokensHighlights />
-            <TokensTable />
+            {/* <TokensTable /> */}
         </Container>
     );
 }

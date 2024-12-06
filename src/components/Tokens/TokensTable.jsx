@@ -7,7 +7,7 @@ const TokensTable = () => {
     const navigate = useNavigate();
     const [tokens, setTokens] = useState([]);
     const [search, setSearch] = useState('');
-    const [sortField, setSortField] = useState('None');
+    const [sortField, setSortField] = useState('total_volume');
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [totalTokens, setTotalTokens] = useState(0);
@@ -17,10 +17,10 @@ const TokensTable = () => {
     }, [page, rowsPerPage, search, sortField]);
 
     const fetchTokens = async (page, rowsPerPage) => {
-        const response = await axios.get(`http://localhost:8000/api/tokens?page=${page + 1}&page_limit=${rowsPerPage}&search=${search}&sort_field=${sortField}`);
+        const response = await axios.get(`http://localhost:8000/current-token-metric?page_number=${page + 1}&page_limit=${rowsPerPage}&search_query=${search}&sort_by=${sortField}`);
         const data = response.data;
         setTokens(data.tokens);
-        setTotalTokens(data.total);
+        setTotalTokens(data.total_token_count);
     };
 
     const handlePageChange = (event, newPage) => {
