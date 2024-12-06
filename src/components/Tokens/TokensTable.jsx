@@ -68,21 +68,21 @@ const TokensTable = () => {
                 <Table>
                     <TableHead>
                         <TableRow>
-                            <TableCell>Price</TableCell>
+                            <TableCell>#</TableCell>
                             <TableCell>Token</TableCell>
+                            <TableCell>Price</TableCell>
                             <TableCell>Liquidity</TableCell>
                             <TableCell>Volume</TableCell>
-                            <TableCell>Fees</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {tokens.map((token) => (
-                            <TableRow key={token.id} onClick={() => navigate(`/tokens/${token.id}`)}>
-                                <TableCell>{token.name}</TableCell>
+                        {tokens.map((token, index) => (
+                            <TableRow key={token.token_address} onClick={() => navigate(`/tokens/${token.token_address}`)}>
+                                <TableCell>{index + 1}</TableCell>
+                                <TableCell>{token.symbol || "ETH"}</TableCell>
                                 <TableCell>${token.price}</TableCell>
-                                <TableCell>${token.liquidity}</TableCell>
-                                <TableCell>${token.volume}</TableCell>
-                                <TableCell>${token.fees}</TableCell>
+                                <TableCell>${token.total_liquidity}</TableCell>
+                                <TableCell>${token.total_volume}</TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
