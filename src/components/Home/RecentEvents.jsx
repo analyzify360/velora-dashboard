@@ -1,20 +1,28 @@
 import React, {useState, useEffect} from 'react';
-import { Paper, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Button } from '@mui/material';
+import { Paper, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Button, LinearProgress } from '@mui/material';
 import axios from 'axios';
 
 const RecentEvents = () => {
 
   const [events, setEvents] = useState([]);
   const [filter, setFilter] = useState('all');
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     getRecentEvents();
   }, [filter]);
 
   const getRecentEvents = async () => {
-    const response = await axios.get(`http://localhost:8000/recent-pool-event?page_limit=10&filter_by=${filter}`);
-    const data = response.data;
-    setEvents(data);
+    setLoading(true);
+    try {
+      const response = await axios.get(`http://localhost:8000/recent-pool-event?page_limit=10&filter_by=${filter}`);
+      const data = response.data;
+      setEvents(data);
+    } catch (error) {
+      console.error('Error fetching recent events:', error);
+    } finally {
+      setLoading(false);
+    }
   }
   return (
     <Paper sx={{ padding: '20px', marginBottom: '40px' }}>
@@ -22,12 +30,40 @@ const RecentEvents = () => {
         Recent Events
       </Typography>
       <div className="event-filters" sx={{ marginBottom: '10px' }}>
-        <Button variant="outlined" sx={{ marginRight: '10px' }} onClick={() => { setFilter('all')}}>All</Button>
-        <Button variant="outlined" sx={{ marginRight: '10px' }} onClick={() => { setFilter('swap')}}>Swaps</Button>
-        <Button variant="outlined" sx={{ marginRight: '10px' }} onClick={() => { setFilter('mint')}}>Mints</Button>
-        <Button variant="outlined" onClick={() => { setFilter('burn')}}>Burns</Button>
+        <Button 
+          variant="outlined"
+          sx={{ marginRight: '10px' }}
+          onClick={() => { setFilter('all')}}
+          disabled={loading}
+        >
+          All
+        </Button>
+        <Button
+          variant="outlined"
+          sx={{ marginRight: '10px' }}
+          onClick={() => { setFilter('swap')}}
+          disabled={loading}
+        >
+          Swaps
+        </Button>
+        <Button
+          variant="outlined"
+          sx={{ marginRight: '10px' }}
+          onClick={() => { setFilter('mint')}}
+          disabled={loading}
+        >
+          Mints
+        </Button>
+        <Button
+          variant="outlined" 
+          onClick={() => { setFilter('burn')}}
+          disabled={loading}
+        >
+          Burns
+        </Button>
       </div>
       <TableContainer component={Paper}>
+        {loading && <LinearProgress />}
         <Table>
           <TableHead>
             <TableRow>

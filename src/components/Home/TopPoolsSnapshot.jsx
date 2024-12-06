@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { Paper, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Button, Box } from '@mui/material';
+import { Paper, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Button, Box, LinearProgress } from '@mui/material';
 import axios from 'axios';
 
 
@@ -8,15 +8,23 @@ const TopPoolsSnapshot = () => {
   const EPSILON = 1e-8;
   
   const [pools, setPools] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     getTopPools();
   }, []);
 
   const getTopPools = async () => {
-    const response = await axios.get('http://localhost:8000/current-pool-metric?page_number=1&page_limit=5&sort_by=liquidity_token0&sort_order=desc');
-    const data = response.data;
-    setPools(data);
+    setLoading(true);
+    try {
+      const response = await axios.get('http://localhost:8000/current-pool-metric?page_number=1&page_limit=5&sort_by=liquidity_token0&sort_order=desc');
+      const data = response.data;
+      setPools(data.pools);
+    } catch (error) {
+      console.error('Error fetching top pools:', error);
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -25,6 +33,7 @@ const TopPoolsSnapshot = () => {
         Top Pools Snapshot
       </Typography>
       <TableContainer component={Paper}>
+        {loading && <LinearProgress />}
         <Table>
           <TableHead>
             <TableRow>

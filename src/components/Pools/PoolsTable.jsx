@@ -5,11 +5,12 @@ import { Paper, Typography, Grid, TextField, FormControl, InputLabel, Select, Me
 
 const PoolsTable = () => {
   const navigate = useNavigate();
+  const EPSILON = 1e-8;
   const [pools, setPools] = useState([]);
   const [search, setSearch] = useState('');
-  const [feeTier, setFeeTier] = useState("All");
-  const [liquidityThreshold, setLiquidityThreshold] = useState('');
-  const [volumeThreshold, setVolumeThreshold] = useState('');
+  const [feeTier, setFeeTier] = useState(0.0);
+  const [liquidityThreshold, setLiquidityThreshold] = useState(0.0);
+  const [volumeThreshold, setVolumeThreshold] = useState(0.0);
   const [sortField, setSortField] = useState("None");
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -22,10 +23,10 @@ const PoolsTable = () => {
   
 
   const fetchPools = async (page, rowsPerPage) => {
-    const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/api/pools?page=${page + 1}&page_limit=${rowsPerPage}&search=${search}&fee_tier=${feeTier}&liquidity_threshold=${liquidityThreshold}&volume_threshold=${volumeThreshold}&sort_field=${sortField}`);
+    const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/current-pool-metric?page_number=${page + 1}&page_limit=${rowsPerPage}&search_query=${search}&fee_tier=${feeTier}&liquidity_threshold=${liquidityThreshold}&volume_threshold=${volumeThreshold}&sort_by=${sortField}`);
     const data = response.data;
     setPools(data.pools);
-    setTotalPools(data.total);
+    setTotalPools(data.total_pool_count);
 
   };
 
@@ -58,7 +59,7 @@ const PoolsTable = () => {
               onChange={(e) => setFeeTier(e.target.value)}
               label="Fee Tier"
             >
-              <MenuItem value="All">All</MenuItem>
+              <MenuItem value="0.0">All</MenuItem>
               <MenuItem value="3000">0.3%</MenuItem>
               <MenuItem value="500">0.05%</MenuItem>
               <MenuItem value="10000">1%</MenuItem>
@@ -115,13 +116,15 @@ const PoolsTable = () => {
           <TableBody>
             {pools.map((pool, index) => (
               <TableRow key={index} onClick={() => navigate(`/analytics/${pool.pool}`)}>
-                <TableCell>{index + 1}</TableCell>
-                <TableCell>{pool.token0_symbol} / {pool.token1_symbol} {pool.fee}</TableCell>
-                <TableCell>{pool.fee}</TableCell>
-                <TableCell>{pool.liquidity}</TableCell>
-                <TableCell>{pool.oneday_volume}</TableCell>
-                <TableCell>{pool.thirtyday_volume}</TableCell>
-                <TableCell>{pool.oneday_ratio}</TableCell>
+                <TableCell>{page * rowsPerPage + index + 1}</TableCell>
+                <TableCell>
+                  {pool.token0_symbol || "ETH"} / {pool.token1_symbol || "ETH"}&nbsp;&nbsp;v3&nbsp;&nbsp;{pool.fee / 10000}%
+                  </TableCell>
+                <TableCell>{(pool.volume_token0 + pool.volume_token1).toFixed(2)}</TableCell>
+                <TableCell>{(pool.liquidity_token0 + pool.liquidity_token1).toFixed(2)}</TableCell>
+                <TableCell>{(pool.volume_token0 + pool.volume_token1).toFixed(2)}</TableCell>
+                <TableCell>{(pool.volume_token0 + pool.volume_token1).toFixed(2)}</TableCell>
+                <TableCell>{(pool.volume_token0 / (pool.volume_token0 + pool.volume_token1 + EPSILON)).toFixed(2)}</TableCell>
               </TableRow>
             ))}
           </TableBody>
