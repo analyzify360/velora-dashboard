@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {Container, Typography, Grid, TableContainer, TableRow, TableCell, Table, TableHead, TableBody, TablePagination, InputLabel, MenuItem, Paper, TextField, FormControl, Select} from '@mui/material';
+import {Typography, Grid, TableContainer, TableRow, TableCell, Table, TableHead, TableBody, TablePagination, InputLabel, MenuItem, Paper, TextField, FormControl, Select, LinearProgress} from '@mui/material';
 import axios from 'axios';
 import {useNavigate} from 'react-router-dom';
 
@@ -11,14 +11,17 @@ const TokensTable = () => {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [totalTokens, setTotalTokens] = useState(0);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         fetchTokens(page, rowsPerPage);
     }, [page, rowsPerPage, search, sortField]);
 
     const fetchTokens = async (page, rowsPerPage) => {
+        setLoading(true);
         const response = await axios.get(`http://localhost:8000/current-token-metric?page_number=${page + 1}&page_limit=${rowsPerPage}&search_query=${search}&sort_by=${sortField}`);
         const data = response.data;
+        setLoading(false);
         setTokens(data.tokens);
         setTotalTokens(data.total_token_count);
     };
@@ -33,7 +36,8 @@ const TokensTable = () => {
     };
 
     return (
-        <Container sx={{padding: '20px'}}>
+        <Paper sx={{ padding: '20px', marginBottom: '40px' }}>
+            
             <Typography variant="h4" gutterBottom>
                 Tokens
             </Typography>
@@ -65,6 +69,7 @@ const TokensTable = () => {
                 </Grid>
             </Grid>
             <TableContainer component={Paper}>
+                {loading && <LinearProgress />}
                 <Table>
                     <TableHead>
                         <TableRow>
@@ -97,7 +102,7 @@ const TokensTable = () => {
                 onPageChange={handlePageChange}
                 onRowsPerPageChange={handleRowsPerPageChange}
             />
-        </Container>
+        </Paper>
     );
 }
 
