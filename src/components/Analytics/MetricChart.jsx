@@ -28,24 +28,26 @@ ChartJS.register(
   zoomPlugin
 );
 
-const PriceChart = ({ metrics }) => {
+const MetricChart = ({ viewTypes, metrics, metricType}) => {
 
   const [data, setData] = useState([]);
+  const [chartLabel, setChartLabel] = useState('');
   
   useEffect(() => {
     setData(metrics);
+    setChartLabel(metricType.charAt(0).toUpperCase() + metricType.slice(1) + ' Chart');
     console.log(metrics);
   }, [metrics]);
 
 
   const chartData = {
-    labels: data.map((metric) => new Date(metric.timestamp * 1000).toISOString()),
+    labels: data.map((metric) => new Date(metric.timestamp * 1000).toLocaleTimeString('en-US', { timeZone: 'UTC' })),
     datasets: [
       {
-        label: 'Price',
-        data: data.map((metric) => metric.price),
-        borderColor: 'rgba(75, 192, 192, 1)',
-        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+        label: metricType === 'price' ? 'Price' : metricType === 'liquidity' ? 'Liquidity' : 'Volume',
+        data: metricType === 'price' ? data.map((metric) => metric.price) : metricType === 'liquidity' ? data.map((metric) => metric.liquidity_token0) : data.map((metric) => metric.volume_token0),
+        borderColor: metricType === 'price' ? 'rgba(75, 192, 192, 1)' : metricType === 'liquidity' ? 'rgba(153, 102, 255, 1)' : 'rgba(255, 159, 64, 1)',
+        backgroundColor: metricType === 'price' ? 'rgba(75, 192, 192, 0.2)' : metricType === 'liquidity' ? 'rgba(153, 102, 255, 0.2)' : 'rgba(255, 159, 64, 0.2)',
         fill: false,
       },
     ],
@@ -86,11 +88,11 @@ const PriceChart = ({ metrics }) => {
   return (
     <Paper sx={{ padding: '20px', marginBottom: '40px' }}>
       <Typography variant="h5" gutterBottom>
-        Price Chart
+        {chartLabel}
       </Typography>
       <Line data={chartData} options={options} />
     </Paper>
   );
 };
 
-export default PriceChart;
+export default MetricChart;

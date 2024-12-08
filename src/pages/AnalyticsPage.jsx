@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Typography, Grid, Paper } from '@mui/material';
 import { Autocomplete } from '@mui/material';
 import KeyMetricsSummary from '../components/Analytics/KeyMetricsSummary';
-import PriceChart from '../components/Analytics/PriceChart';
+import MetricChart from '../components/Analytics/MetricChart';
 import LiquidityChart from '../components/Analytics/LiquidityChart';
 import VolumeChart from '../components/Analytics/VolumeChart';
 import EventsTimeline from '../components/Analytics/EventsTimeline';
@@ -69,15 +69,15 @@ const AnalyticsPage = () => {
       <Paper sx={{ padding: '20px', marginBottom: '40px' }}>
           {/* <KeyMetricsSummary poolAddress={selectedPool.pool} /> */}
           <Grid container spacing={4}>
-            <Grid item xs={12}>
-              <PriceChart viewType={viewType} metrics={metrics} extraData={extraData} />
+            <Grid item xs={6}>
+              <MetricChart viewType={viewType} metrics={metrics} metricType="price"/>
             </Grid>
-            {/* <Grid item xs={12}>
-              <LiquidityChart viewType={viewType} metrics={metrics} extraData={extraData} />
+            <Grid item xs={6}>
+              <MetricChart viewType={viewType} metrics={metrics} metricType="liquidity"/>
             </Grid>
-            <Grid item xs={12}>
-              <VolumeChart viewType={viewType} metrics={metrics} extraData={extraData} />
-            </Grid> */}
+            <Grid item xs={6}>
+              <MetricChart viewType={viewType} metrics={metrics} metricType="volume" />
+            </Grid>
           </Grid>
           {/* <EventsTimeline poolAddress={selectedPool.pool} />
           <ComparisonsAndCorrelations poolAddress={selectedPool.pool} /> */}
