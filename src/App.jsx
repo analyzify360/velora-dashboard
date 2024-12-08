@@ -19,7 +19,7 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/pools" element={<PoolsPage />} />
           <Route path="/tokens" element={<TokensPage />} />
-          <Route path="/analytics/:poolAddress?" element={<AnalyticsPage />} />
+          <Route path="/analytics/:viewType/:address?" element={<AnalyticsPage />} />
           <Route path="/predictions/:poolAddress?" element={<PredictionsPage />} />
           <Route path="/api-docs" element={<APIDocsPage/>}/>
           <Route path="/about" element={<About/>}/>

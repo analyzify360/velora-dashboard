@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { Paper, Typography, Grid, TextField, FormControl, InputLabel, Select, MenuItem, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TablePagination } from '@mui/material';
+import { Paper, Typography, Grid, TextField, FormControl, InputLabel, Select, MenuItem, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TablePagination, LinearProgress} from '@mui/material';
 
 const PoolsTable = () => {
   const navigate = useNavigate();
@@ -15,6 +15,7 @@ const PoolsTable = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [totalPools, setTotalPools] = useState(0);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     fetchPools(page, rowsPerPage);
@@ -23,8 +24,11 @@ const PoolsTable = () => {
   
 
   const fetchPools = async (page, rowsPerPage) => {
+    setLoading(true);
     const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/current-pool-metric?page_number=${page + 1}&page_limit=${rowsPerPage}&search_query=${search}&fee_tier=${feeTier}&liquidity_threshold=${liquidityThreshold}&volume_threshold=${volumeThreshold}&sort_by=${sortField}`);
     const data = response.data;
+    setLoading(false);
+    console.log(data.pools);
     setPools(data.pools);
     setTotalPools(data.total_pool_count);
 
@@ -101,6 +105,7 @@ const PoolsTable = () => {
         </Grid>
       </Grid>
       <TableContainer component={Paper}>
+        {loading && <LinearProgress />}
         <Table>
           <TableHead>
             <TableRow>
@@ -115,7 +120,7 @@ const PoolsTable = () => {
           </TableHead>
           <TableBody>
             {pools.map((pool, index) => (
-              <TableRow key={index} onClick={() => navigate(`/analytics/${pool.pool}`)}>
+              <TableRow key={index} onClick={() => navigate(`/analytics/pool/${pool.pool_address}`)}>
                 <TableCell>{page * rowsPerPage + index + 1}</TableCell>
                 <TableCell>
                   {pool.token0_symbol || "ETH"} / {pool.token1_symbol || "ETH"}&nbsp;&nbsp;v3&nbsp;&nbsp;{pool.fee / 10000}%

@@ -28,30 +28,22 @@ ChartJS.register(
   zoomPlugin
 );
 
-const PriceChart = ({ poolAddress }) => {
+const PriceChart = ({ metrics }) => {
+
   const [data, setData] = useState([]);
-
+  
   useEffect(() => {
-    if (poolAddress) {
-      fetchSignals();
-    }
-  }, [poolAddress]);
+    setData(metrics);
+    console.log(metrics);
+  }, [metrics]);
 
-  const fetchSignals = async () => {
-    const response = await axios.get(`http://localhost:8000/api/pools/${poolAddress}/signals?type=price`);
-    if (response.status !== 200) {
-      console.error('Error fetching signals:', response);
-      return;
-    }
-    setData(response.data);
-  };
 
   const chartData = {
-    labels: data.map((signal) => new Date(signal.timestamp * 1000).toISOString()),
+    labels: data.map((metric) => new Date(metric.timestamp * 1000).toISOString()),
     datasets: [
       {
         label: 'Price',
-        data: data.map((signal) => signal.price),
+        data: data.map((metric) => metric.price),
         borderColor: 'rgba(75, 192, 192, 1)',
         backgroundColor: 'rgba(75, 192, 192, 0.2)',
         fill: false,
