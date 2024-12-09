@@ -23,19 +23,10 @@ const AnalyticsPage = () => {
     fetchPool();
   }, []);
 
-  // useEffect(() => {
-  //   if (selectedPool) {
-  //     navigate(`/analytics/${selectedPool.pool}`);
-  //     setSearchQuery(`${selectedPool.token0_symbol} / ${selectedPool.token1_symbol} - ${selectedPool.fee}`);
-  //   } else {
-  //     navigate('/analytics');
-  //     setSearchQuery('')
-  //   }
-  // }, [selectedPool]);
 
   const fetchPool = async () => {
     if (address) {
-      const response = await axios.get(`http://localhost:8000/${viewType}-metric?address=${address}&start_timestamp=1620259200&end_timestamp=1620345600`);
+      const response = await axios.get(`http://localhost:8000/${viewType}-metric?page_limit=288&address=${address}&start_timestamp=1620259200&end_timestamp=1620345600`);
       const data = response.data;
       if (data){
         if (viewType === 'pool') {
@@ -48,6 +39,7 @@ const AnalyticsPage = () => {
           setTotalMetricsCount(data.total_metrics_count);
         }
       }
+      console.log(data)
     }
   };
 
@@ -67,23 +59,20 @@ const AnalyticsPage = () => {
         Analytics Dashboard
       </Typography>
       <Paper sx={{ padding: '20px', marginBottom: '40px' }}>
-          {/* <KeyMetricsSummary poolAddress={selectedPool.pool} /> */}
+          <KeyMetricsSummary viewType={viewType} metrics={metrics} extraData={extraData}/>
           <Grid container spacing={4}>
             <Grid item xs={6}>
-              <MetricChart viewType={viewType} metrics={metrics} metricType="price"/>
+              <MetricChart viewType={viewType} metrics={metrics} metricType="price" extraData={extraData}/>
             </Grid>
             <Grid item xs={6}>
-              <MetricChart viewType={viewType} metrics={metrics} metricType="liquidity"/>
+              <MetricChart viewType={viewType} metrics={metrics} metricType="liquidity" extraData={extraData}/>
             </Grid>
             <Grid item xs={6}>
-              <MetricChart viewType={viewType} metrics={metrics} metricType="volume" />
+              <MetricChart viewType={viewType} metrics={metrics} metricType="volume" extraData={extraData}/>
             </Grid>
           </Grid>
           {/* <EventsTimeline poolAddress={selectedPool.pool} />
           <ComparisonsAndCorrelations poolAddress={selectedPool.pool} /> */}
-        <Paper sx={{ padding: '20px', textAlign: 'center' }}>
-          <Typography variant="h6">Please select a pool to view analytics.</Typography>
-        </Paper>
       </Paper>
     </Container>
   );
