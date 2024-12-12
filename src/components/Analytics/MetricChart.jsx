@@ -30,22 +30,13 @@ ChartJS.register(
 
 const MetricChart = ({ viewType, metrics, metricType, extraData}) => {
 
-  const [data, setData] = useState([]);
-  const [chartLabel, setChartLabel] = useState('');
-  
-  useEffect(() => {
-    setData(metrics);
-    setChartLabel(metricType.charAt(0).toUpperCase() + metricType.slice(1) + ' Chart');
-    console.log(metrics);
-  }, [metrics]);
-
-
+  const chartLabel = viewType === 'pool' ? `Pool ${metricType === 'price' ? 'Price' : metricType === 'liquidity' ? 'Liquidity' : 'Volume'} Chart` : `Token ${metricType === 'price' ? 'Price' : metricType === 'liquidity' ? 'Liquidity' : 'Volume'} Chart`;
   const chartData = viewType === 'pool' ? {
-    labels: data.map((metric) => new Date(metric.timestamp * 1000).toLocaleTimeString('en-US', { timeZone: 'UTC' })),
+    labels: metrics.map((metric) => new Date(metric.timestamp * 1000).toLocaleTimeString('en-US', { timeZone: 'UTC' })),
     datasets: [
       {
         label: metricType === 'price' ? 'Price' : metricType === 'liquidity' ? 'Liquidity' : 'Volume',
-        data: metricType === 'price' ? data.map((metric) => metric.price) : metricType === 'liquidity' ? data.map((metric) => metric.liquidity_token0 * extraData.token0_price + metric.liquidity_token1 * extraData.token0_price) : data.map((metric) => metric.volume_token0 * extraData.token0_price + metric.volume_token1 * extraData.token1_price),
+        data: metricType === 'price' ? metrics.map((metric) => metric.price) : metricType === 'liquidity' ? metrics.map((metric) => metric.liquidity_token0 * extraData.token0_price + metric.liquidity_token1 * extraData.token0_price) : metrics.map((metric) => metric.volume_token0 * extraData.token0_price + metric.volume_token1 * extraData.token1_price),
         borderColor: metricType === 'price' ? 'rgba(75, 192, 192, 1)' : metricType === 'liquidity' ? 'rgba(153, 102, 255, 1)' : 'rgba(255, 159, 64, 1)',
         backgroundColor: metricType === 'price' ? 'rgba(75, 192, 192, 0.2)' : metricType === 'liquidity' ? 'rgba(153, 102, 255, 0.2)' : 'rgba(255, 159, 64, 0.2)',
         fill: false,
@@ -53,7 +44,20 @@ const MetricChart = ({ viewType, metrics, metricType, extraData}) => {
         pointHitRadius: 5,
       },
     ],
-  } : {}
+  } : {
+    labels: metrics.map((metric) => new Date(metric.timestamp * 1000).toLocaleTimeString('en-US', { timeZone: 'UTC' })),
+    datasets: [
+      {
+        label: metricType === 'price' ? 'Price' : metricType === 'liquidity' ? 'Liquidity' : 'Volume',
+        data: metricType === 'price' ? metrics.map((metric) => metric.close_price) : metricType === 'liquidity' ? metrics.map((metric) => metric.total_liquidity * metric.close_price) : metrics.map((metric) => metric.total_volume * metric.close_price),
+        borderColor: metricType === 'price' ? 'rgba(75, 192, 192, 1)' : metricType === 'liquidity' ? 'rgba(153, 102, 255, 1)' : 'rgba(255, 159, 64, 1)',
+        backgroundColor: metricType === 'price' ? 'rgba(75, 192, 192, 0.2)' : metricType === 'liquidity' ? 'rgba(153, 102, 255, 0.2)' : 'rgba(255, 159, 64, 0.2)',
+        fill: false,
+        pointRadius: 1,
+        pointHitRadius: 5,
+      },
+    ],
+  }
 
   const options = {
     responsive: true,
