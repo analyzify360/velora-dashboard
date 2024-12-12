@@ -82,7 +82,7 @@ const TokensTable = () => {
                     </TableHead>
                     <TableBody>
                         {tokens.map((token, index) => (
-                            <TableRow key={token.token_address} onClick={() => navigate(`/tokens/${token.token_address}`)}>
+                            <TableRow key={token.token_address} onClick={() => navigate(`/analytics/token/${token.token_address}`)}>
                                 <TableCell>{index + 1}</TableCell>
                                 <TableCell>{token.symbol || "ETH"}</TableCell>
                                 <TableCell>${token.price}</TableCell>
