@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Container, Typography, Grid, Paper, TextField } from '@mui/material';
+import { Container, Typography, Grid, Paper } from '@mui/material';
 import { Autocomplete } from '@mui/material';
 import KeyMetricsSummary from '../components/Analytics/KeyMetricsSummary';
-import PriceChart from '../components/Analytics/PriceChart';
+import MetricChart from '../components/Analytics/MetricChart';
 import LiquidityChart from '../components/Analytics/LiquidityChart';
 import VolumeChart from '../components/Analytics/VolumeChart';
 import EventsTimeline from '../components/Analytics/EventsTimeline';
@@ -11,37 +11,35 @@ import ComparisonsAndCorrelations from '../components/Analytics/ComparisonsAndCo
 import axios from 'axios';
 
 const AnalyticsPage = () => {
-  const { poolAddress } = useParams();
+  const { viewType, address } = useParams();
   const navigate = useNavigate();
   const [selectedPool, setSelectedPool] = useState(null);
-  const [pools, setPools] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [metrics, setMetrics] = useState([]);
+  const [extraData, setExtraData] = useState({});
+  const [totalMetricsCount, setTotalMetricsCount] = useState(0);
 
   useEffect(() => {
-    fetchPools();
-  }, [searchQuery, poolAddress]);
+    fetchPool();
+  }, []);
 
-  useEffect(() => {
-    if (selectedPool) {
-      navigate(`/analytics/${selectedPool.pool}`);
-      setSearchQuery(`${selectedPool.token0_symbol} / ${selectedPool.token1_symbol} - ${selectedPool.fee}`);
-    } else {
-      navigate('/analytics');
-      setSearchQuery('')
-    }
-  }, [selectedPool]);
 
-  const fetchPools = async () => {
-    if (poolAddress) {
-      const response = await axios.get(`http://localhost:8000/api/pools?search=${poolAddress}`);
+  const fetchPool = async () => {
+    if (address) {
+      const response = await axios.get(`http://localhost:8000/${viewType}-metric?page_limit=288&address=${address}&start_timestamp=1620259200&end_timestamp=1620345600`);
       const data = response.data;
-      setPools(data.pools);
-      const pool = data.pools.find((p) => p.pool === poolAddress);
-      setSelectedPool(pool);
-    } else {
-      const response = await axios.get(`http://localhost:8000/api/pools?page=1&page_limit=10&search=${searchQuery}`);
-      const data = response.data;
-      setPools(data.pools);
+      if (data){
+        if (viewType === 'pool') {
+          setMetrics(data.pools);
+          setExtraData(data.token_pair_data);
+          setTotalMetricsCount(data.total_metrics_count);
+        } else if (viewType === 'token') {
+          setMetrics(data.tokens);
+          setExtraData(data.token_data);
+          setTotalMetricsCount(data.total_metrics_count);
+        }
+      }
+      console.log(data)
     }
   };
 
@@ -60,38 +58,22 @@ const AnalyticsPage = () => {
       <Typography variant="h4" gutterBottom>
         Analytics Dashboard
       </Typography>
-      <Autocomplete
-        options={pools}
-        getOptionLabel={(option) => `${option.token0_symbol}  / ${option.token1_symbol} - ${option.fee}`}
-        value={selectedPool}
-        onChange={handlePoolChange}
-        inputValue={searchQuery}
-        onInputChange={handleInputChange}
-        renderInput={(params) => <TextField {...params} label="Select Pool" variant="outlined" fullWidth />}
-        sx={{ marginBottom: '20px' }}
-      />
-      {selectedPool ? (
-        <>
-          <KeyMetricsSummary poolAddress={selectedPool.pool} />
+      <Paper sx={{ padding: '20px', marginBottom: '40px' }}>
+          <KeyMetricsSummary viewType={viewType} metrics={metrics} extraData={extraData}/>
           <Grid container spacing={4}>
-            <Grid item xs={12} md={6}>
-              <PriceChart poolAddress={selectedPool.pool} />
+            <Grid item xs={6}>
+              <MetricChart viewType={viewType} metrics={metrics} metricType="price" extraData={extraData}/>
             </Grid>
-            <Grid item xs={12} md={6}>
-              <LiquidityChart poolAddress={selectedPool.pool} />
+            <Grid item xs={6}>
+              <MetricChart viewType={viewType} metrics={metrics} metricType="liquidity" extraData={extraData}/>
             </Grid>
-            <Grid item xs={12}>
-              <VolumeChart poolAddress={selectedPool.pool} />
+            <Grid item xs={6}>
+              <MetricChart viewType={viewType} metrics={metrics} metricType="volume" extraData={extraData}/>
             </Grid>
           </Grid>
-          <EventsTimeline poolAddress={selectedPool.pool} />
-          <ComparisonsAndCorrelations poolAddress={selectedPool.pool} />
-        </>
-      ) : (
-        <Paper sx={{ padding: '20px', textAlign: 'center' }}>
-          <Typography variant="h6">Please select a pool to view analytics.</Typography>
-        </Paper>
-      )}
+          {/* <EventsTimeline poolAddress={selectedPool.pool} />
+          <ComparisonsAndCorrelations poolAddress={selectedPool.pool} /> */}
+      </Paper>
     </Container>
   );
 };

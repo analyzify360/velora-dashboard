@@ -1,19 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { Paper, Typography, Grid, TextField, FormControl, InputLabel, Select, MenuItem, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TablePagination } from '@mui/material';
+import { Paper, Typography, Grid, TextField, FormControl, InputLabel, Select, MenuItem, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TablePagination, LinearProgress} from '@mui/material';
 
 const PoolsTable = () => {
   const navigate = useNavigate();
+  const EPSILON = 1e-8;
   const [pools, setPools] = useState([]);
   const [search, setSearch] = useState('');
-  const [feeTier, setFeeTier] = useState("All");
-  const [liquidityThreshold, setLiquidityThreshold] = useState('');
-  const [volumeThreshold, setVolumeThreshold] = useState('');
+  const [feeTier, setFeeTier] = useState(0.0);
+  const [liquidityThreshold, setLiquidityThreshold] = useState(0.0);
+  const [volumeThreshold, setVolumeThreshold] = useState(0.0);
   const [sortField, setSortField] = useState("None");
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [totalPools, setTotalPools] = useState(0);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     fetchPools(page, rowsPerPage);
@@ -22,11 +24,13 @@ const PoolsTable = () => {
   
 
   const fetchPools = async (page, rowsPerPage) => {
-    
-    const response = await axios.get(`http://localhost:8000/api/pools?page=${page + 1}&page_limit=${rowsPerPage}&search=${search}&fee_tier=${feeTier}&liquidity_threshold=${liquidityThreshold}&volume_threshold=${volumeThreshold}&sort_field=${sortField}`);
+    setLoading(true);
+    const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/current-pool-metric?page_number=${page + 1}&page_limit=${rowsPerPage}&search_query=${search}&fee_tier=${feeTier}&liquidity_threshold=${liquidityThreshold}&volume_threshold=${volumeThreshold}&sort_by=${sortField}`);
     const data = response.data;
+    setLoading(false);
+    console.log(data.pools);
     setPools(data.pools);
-    setTotalPools(data.total);
+    setTotalPools(data.total_pool_count);
 
   };
 
@@ -59,7 +63,7 @@ const PoolsTable = () => {
               onChange={(e) => setFeeTier(e.target.value)}
               label="Fee Tier"
             >
-              <MenuItem value="All">All</MenuItem>
+              <MenuItem value="0.0">All</MenuItem>
               <MenuItem value="3000">0.3%</MenuItem>
               <MenuItem value="500">0.05%</MenuItem>
               <MenuItem value="10000">1%</MenuItem>
@@ -101,26 +105,31 @@ const PoolsTable = () => {
         </Grid>
       </Grid>
       <TableContainer component={Paper}>
+        {loading && <LinearProgress />}
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell><Typography fontWeight="bold">Pool Name</Typography></TableCell>
-              <TableCell><Typography fontWeight="bold">Fee Tier</Typography></TableCell>
+              <TableCell><Typography fontWeight="bold">#</Typography></TableCell>
+              <TableCell><Typography fontWeight="bold">Pool</Typography></TableCell>
+              <TableCell><Typography fontWeight="bold">TVL</Typography></TableCell>
               <TableCell><Typography fontWeight="bold">Liquidity</Typography></TableCell>
-              <TableCell><Typography fontWeight="bold">Volume (24h)</Typography></TableCell>
-              <TableCell><Typography fontWeight="bold">Number of Events (24h)</Typography></TableCell>
-              <TableCell><Typography fontWeight="bold">Price Range</Typography></TableCell>
+              <TableCell><Typography fontWeight="bold">1D Vol</Typography></TableCell>
+              <TableCell><Typography fontWeight="bold">3D Vol</Typography></TableCell>
+              <TableCell><Typography fontWeight="bold">1D vol/TVL</Typography></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {pools.map((pool, index) => (
-              <TableRow key={index} onClick={() => navigate(`/analytics/${pool.pool}`)}>
-                <TableCell>{pool.token0_symbol} / {pool.token1_symbol}</TableCell>
-                <TableCell>{pool.fee}</TableCell>
-                <TableCell>{pool.liquidity}</TableCell>
-                <TableCell>{pool.volume_24h}</TableCell>
-                <TableCell>{pool.events_count_24h}</TableCell>
-                <TableCell>{pool.price_range_24h}</TableCell>
+              <TableRow key={index} onClick={() => navigate(`/analytics/pool/${pool.pool_address}`)}>
+                <TableCell>{page * rowsPerPage + index + 1}</TableCell>
+                <TableCell>
+                  {pool.token0_symbol || "ETH"} / {pool.token1_symbol || "ETH"}&nbsp;&nbsp;v3&nbsp;&nbsp;{pool.fee / 10000}%
+                  </TableCell>
+                <TableCell>{(pool.volume_token0 + pool.volume_token1).toFixed(2)}</TableCell>
+                <TableCell>{(pool.liquidity_token0 + pool.liquidity_token1).toFixed(2)}</TableCell>
+                <TableCell>{(pool.volume_token0 + pool.volume_token1).toFixed(2)}</TableCell>
+                <TableCell>{(pool.volume_token0 + pool.volume_token1).toFixed(2)}</TableCell>
+                <TableCell>{(pool.volume_token0 / (pool.volume_token0 + pool.volume_token1 + EPSILON)).toFixed(2)}</TableCell>
               </TableRow>
             ))}
           </TableBody>

@@ -10,7 +10,7 @@ const TopPoolsHighlights = () => {
   }, []);
 
   const fetchTopPools = async () => {
-    const response = await axios.get(`http://localhost:8000/api/pools?page=1&page_limit=3&sort_field=volume&search=&fee_tier=All&liquidity_threshold=&volume_threshold=`);
+    const response = await axios.get(`http://localhost:8000/current-pool-metric?page_number=1&page_limit=3&sort_by=liquidity_token0&search_query=&fee_tier=0.0&liquidity_threshold=0.0&volume_threshold=0.0`);
     const data = response.data;
     setTopPools(data.pools);
   };
@@ -24,11 +24,9 @@ const TopPoolsHighlights = () => {
         {topPools.map((pool, index) => (
           <Grid item xs={12} sm={6} md={4} key={index}>
             <Paper sx={{ padding: '10px', textAlign: 'left' }}>
-              <Typography variant="h6">{pool.token0_symbol} / {pool.token1_symbol}</Typography>
-              <Typography variant="body1">Liquidity: {pool.liquidity}</Typography>
-              <Typography variant="body1">Volume (24h): {pool.volume_24h}</Typography>
-              <Typography variant="body1">Events (24h): {pool.events_count_24h}</Typography>
-              <Typography variant="body1">Price Range: {pool.price_range_24h}</Typography>
+              <Typography variant="h6">{pool.token0_symbol || "ETH"} / {pool.token1_symbol || "ETH"}</Typography>
+              <Typography variant="body1">Liquidity: {pool.liquidity_token0 + pool.liquidity_token1}</Typography>
+              <Typography variant="body1">TVL: {pool.volume_token0 + pool.volume_token1}</Typography>
             </Paper>
           </Grid>
         ))}
