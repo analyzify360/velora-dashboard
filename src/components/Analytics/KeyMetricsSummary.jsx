@@ -2,8 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { Paper, Typography, Grid } from '@mui/material';
 import Sparkline from './Sparkline';
 
-const KeyMetricsSummary = ({ viewType, metric, extraData }) => {
-  const lastMetric = metrics.length > 0 ? metrics[metrics.length - 1] : null;
+const KeyMetricsSummary = ({ viewType, metrics, extraData }) => {
+  const [lastMetric, setLastMetric] = useState(null);
+  useEffect(() => {
+    if (metrics.length > 0) {
+      setLastMetric(metrics[metrics.length - 1]);
+    }
+  }, [metrics]);
+  
   return (
     (viewType === 'pool') ?
     (extraData) ? (
@@ -33,11 +39,11 @@ const KeyMetricsSummary = ({ viewType, metric, extraData }) => {
       <Paper sx={{ padding: '20px', marginBottom: '40px' }}>
         <Grid container spacing={2}>
           <Grid item xs={12} sm={4}>
-            <Paper sx={{ padding: '10px', textAlign: 'center' }}>
+            <Paper sx={{ padding: '10px', textAlign: 'left' }}>
               <Typography variant="h6">{extraData.symbol}</Typography>
-              <Typography variant="body1">${extraData ? extraData.price : 0}</Typography>
-              <Typography variant="body1">Market Cap: ${lastMetric? lastMetric.liquidity * extraData.price : 0}</Typography>
-              <Typography variant="body1">Volume: ${lastMetric? lastMetric.volume * extraData.price : 0}</Typography>
+              <Typography variant="body1">Price${lastMetric? lastMetric.close_price.toFixed(2) : 0}</Typography>
+              <Typography variant="body1">Liquidity: ${lastMetric? (lastMetric.total_liquidity * lastMetric.close_price).toFixed(2) : 0}</Typography>
+              <Typography variant="body1">Volume: ${lastMetric? (lastMetric.total_volume * lastMetric.close_price).toFixed(2) : 0}</Typography>
               {/* <Sparkline data={priceData} /> */}
             </Paper> 
           </Grid>
