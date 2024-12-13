@@ -16,6 +16,7 @@ const AnalyticsPage = () => {
   const [metrics, setMetrics] = useState([]);
   const [extraData, setExtraData] = useState({});
   const [totalMetricsCount, setTotalMetricsCount] = useState(0);
+  const [period, setPeriod] = useState('1d');
 
   useEffect(() => {
     fetchPool();
@@ -24,7 +25,7 @@ const AnalyticsPage = () => {
 
   const fetchPool = async () => {
     if (address) {
-      const response = await axios.get(`http://localhost:8000/${viewType}-metric?page_limit=288&address=${address}&start_timestamp=1620559500&end_timestamp=1620604800`);
+      const response = await axios.get(`http://localhost:8000/${viewType}-metric?page_limit=288&address=${address}&period=${period}`);
       const data = response.data;
       if (data){
         if (viewType === 'pool') {

@@ -55,7 +55,6 @@ const TopPoolsSnapshot = () => {
               <TableCell>{index + 1}</TableCell>
               <TableCell>
                 {pool.token0_symbol || "ETH"} / {pool.token1_symbol || "ETH"}&nbsp;&nbsp;v3&nbsp;&nbsp;{pool.fee / 10000}%
-                {pool.token0_price}, {pool.token1_price}
                 </TableCell>
               <TableCell>${((pool.total_volume_token0 * pool.token0_price + pool.total_volume_token1 * pool.token1_price) / MILLION_NUMBER).toFixed(2)}M</TableCell>
               <TableCell>${((pool.liquidity_token0 * pool.token0_price + pool.liquidity_token1 * pool.token1_price)/ MILLION_NUMBER).toFixed(2)}M</TableCell>
@@ -66,7 +65,7 @@ const TopPoolsSnapshot = () => {
           </TableBody>
         </Table>
       </TableContainer>
-      <Button variant="contained" color="primary" sx={{ marginTop: '10px' }} onClick={() => navigate('/analytics/pools')}>
+      <Button variant="contained" color="primary" sx={{ marginTop: '10px' }} onClick={() => navigate('/pools')}>
         View More
       </Button>
     </Paper>
