@@ -26,7 +26,7 @@ const TopPoolsHighlights = () => {
             <Paper sx={{ padding: '10px', textAlign: 'left' }}>
               <Typography variant="h6">{pool.token0_symbol || "ETH"} / {pool.token1_symbol || "ETH"}</Typography>
               <Typography variant="body1">Liquidity: {pool.liquidity_token0 + pool.liquidity_token1}</Typography>
-              <Typography variant="body1">TVL: {pool.volume_token0 + pool.volume_token1}</Typography>
+              <Typography variant="body1">TVL: {pool.total_volume_token0 + pool.total_volume_token1}</Typography>
             </Paper>
           </Grid>
         ))}

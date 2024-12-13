@@ -4,8 +4,6 @@ import { Container, Typography, Grid, Paper } from '@mui/material';
 import { Autocomplete } from '@mui/material';
 import KeyMetricsSummary from '../components/Analytics/KeyMetricsSummary';
 import MetricChart from '../components/Analytics/MetricChart';
-import LiquidityChart from '../components/Analytics/LiquidityChart';
-import VolumeChart from '../components/Analytics/VolumeChart';
 import EventsTimeline from '../components/Analytics/EventsTimeline';
 import ComparisonsAndCorrelations from '../components/Analytics/ComparisonsAndCorrelations';
 import axios from 'axios';
@@ -26,7 +24,7 @@ const AnalyticsPage = () => {
 
   const fetchPool = async () => {
     if (address) {
-      const response = await axios.get(`http://localhost:8000/${viewType}-metric?page_limit=288&address=${address}&start_timestamp=1620259200&end_timestamp=1620345600`);
+      const response = await axios.get(`http://localhost:8000/${viewType}-metric?page_limit=288&address=${address}&start_timestamp=1620559500&end_timestamp=1620604800`);
       const data = response.data;
       if (data){
         if (viewType === 'pool') {
