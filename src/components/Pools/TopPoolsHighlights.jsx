@@ -10,7 +10,7 @@ const TopPoolsHighlights = () => {
   }, []);
 
   const fetchTopPools = async () => {
-    const response = await axios.get(`http://localhost:8000/current-pool-metric?page_number=1&page_limit=3&sort_by=liquidity_token0&search_query=&fee_tier=0.0&liquidity_threshold=0.0&volume_threshold=0.0`);
+    const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/current-pool-metric?page_number=1&page_limit=3&sort_by=liquidity_token0&search_query=&fee_tier=0.0&liquidity_threshold=0.0&volume_threshold=0.0`);
     const data = response.data;
     setTopPools(data.pools);
   };

@@ -25,7 +25,7 @@ const AnalyticsPage = () => {
 
   const fetchPool = async () => {
     if (address) {
-      const response = await axios.get(`http://localhost:8000/${viewType}-metric?page_limit=288&address=${address}&period=${period}`);
+      const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/${viewType}-metric?page_limit=288&address=${address}&period=${period}`);
       const data = response.data;
       if (data){
         if (viewType === 'pool') {

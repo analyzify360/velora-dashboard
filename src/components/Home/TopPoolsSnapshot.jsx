@@ -21,7 +21,7 @@ const TopPoolsSnapshot = () => {
   const getTopPools = async () => {
     setLoading(true);
     try {
-      const response = await axios.get('http://localhost:8000/current-pool-metric?page_number=1&page_limit=5&sort_by=liquidity_token0&sort_order=desc');
+      const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/current-pool-metric?page_number=1&page_limit=5&sort_by=liquidity_token0&sort_order=desc`);
       const data = response.data;
       setPools(data.pools);
     } catch (error) {
