@@ -12,7 +12,7 @@ const TopTokens = () => {
     }, []);
 
     const fetchTokens = async () => {
-        const response = await axios.get(`http://localhost:8000/current-token-metric?page_number=1&page_limit=3&search_query=&sort_by=total_volume`);
+        const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/current-token-metric?page_number=1&page_limit=3&search_query=&sort_by=total_volume`);
         const data = response.data;
         setTokens(data.tokens);
     };

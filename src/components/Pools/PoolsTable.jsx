@@ -6,6 +6,8 @@ import { Paper, Typography, Grid, TextField, FormControl, InputLabel, Select, Me
 const PoolsTable = () => {
   const navigate = useNavigate();
   const EPSILON = 1e-8;
+  const MILLION_NUMBER = 1000000;
+  const THOUSAND_NUMBER = 1000;
   const [pools, setPools] = useState([]);
   const [search, setSearch] = useState('');
   const [feeTier, setFeeTier] = useState(0.0);
@@ -55,54 +57,6 @@ const PoolsTable = () => {
             onChange={(e) => setSearch(e.target.value)}
           />
         </Grid>
-        <Grid item xs={12} sm={6} md={2}>
-          <FormControl fullWidth variant="outlined">
-            <InputLabel>Fee Tier</InputLabel>
-            <Select
-              value={feeTier}
-              onChange={(e) => setFeeTier(e.target.value)}
-              label="Fee Tier"
-            >
-              <MenuItem value="0.0">All</MenuItem>
-              <MenuItem value="3000">0.3%</MenuItem>
-              <MenuItem value="500">0.05%</MenuItem>
-              <MenuItem value="10000">1%</MenuItem>
-            </Select>
-          </FormControl>
-        </Grid>
-        <Grid item xs={12} sm={6} md={2}>
-          <TextField
-            label="Liquidity Threshold"
-            variant="outlined"
-            fullWidth
-            value={liquidityThreshold}
-            onChange={(e) => setLiquidityThreshold(e.target.value, 10)}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} md={2}>
-          <TextField
-            label="Volume Threshold"
-            variant="outlined"
-            fullWidth
-            value={volumeThreshold}
-            onChange={(e) => setVolumeThreshold(e.target.value, 10)}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} md={2}>
-          <FormControl fullWidth variant="outlined">
-            <InputLabel>Sort By</InputLabel>
-            <Select
-              value={sortField}
-              onChange={(e) => setSortField(e.target.value)}
-              label="Sort By"
-            >
-              <MenuItem value="None">None</MenuItem>
-              <MenuItem value="liquidity">Highest Liquidity</MenuItem>
-              <MenuItem value="volume">Highest Volume (24h)</MenuItem>
-              <MenuItem value="events">Most Active Pool</MenuItem>
-            </Select>
-          </FormControl>
-        </Grid>
       </Grid>
       <TableContainer component={Paper}>
         {loading && <LinearProgress />}
@@ -114,7 +68,6 @@ const PoolsTable = () => {
               <TableCell><Typography fontWeight="bold">TVL</Typography></TableCell>
               <TableCell><Typography fontWeight="bold">Liquidity</Typography></TableCell>
               <TableCell><Typography fontWeight="bold">1D Vol</Typography></TableCell>
-              <TableCell><Typography fontWeight="bold">3D Vol</Typography></TableCell>
               <TableCell><Typography fontWeight="bold">1D vol/TVL</Typography></TableCell>
             </TableRow>
           </TableHead>
@@ -124,12 +77,11 @@ const PoolsTable = () => {
                 <TableCell>{page * rowsPerPage + index + 1}</TableCell>
                 <TableCell>
                   {pool.token0_symbol || "ETH"} / {pool.token1_symbol || "ETH"}&nbsp;&nbsp;v3&nbsp;&nbsp;{pool.fee / 10000}%
-                  </TableCell>
-                <TableCell>{(pool.volume_token0 + pool.volume_token1).toFixed(2)}</TableCell>
-                <TableCell>{(pool.liquidity_token0 + pool.liquidity_token1).toFixed(2)}</TableCell>
-                <TableCell>{(pool.volume_token0 + pool.volume_token1).toFixed(2)}</TableCell>
-                <TableCell>{(pool.volume_token0 + pool.volume_token1).toFixed(2)}</TableCell>
-                <TableCell>{(pool.volume_token0 / (pool.volume_token0 + pool.volume_token1 + EPSILON)).toFixed(2)}</TableCell>
+                </TableCell>
+                <TableCell>${((pool.total_volume_token0 * pool.token0_price + pool.total_volume_token1 * pool.token1_price) / MILLION_NUMBER).toFixed(2)}M</TableCell>
+                <TableCell>${((pool.liquidity_token0 * pool.token0_price + pool.liquidity_token1 * pool.token1_price)/ MILLION_NUMBER).toFixed(2)}M</TableCell>
+                <TableCell>${((pool.volume_token0_1day * pool.token0_price + pool.volume_token1_1day * pool.token1_price) / THOUSAND_NUMBER).toFixed(2)}K</TableCell>
+                <TableCell>${((pool.volume_token0_1day * pool.token0_price + pool.volume_token1_1day * pool.token1_price) / (pool.total_volume_token0 * pool.token0_price + pool.total_volume_token1 * pool.token1_price + EPSILON) * 100).toFixed(2)}</TableCell>
               </TableRow>
             ))}
           </TableBody>

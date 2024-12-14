@@ -19,7 +19,7 @@ const TokensTable = () => {
 
     const fetchTokens = async (page, rowsPerPage) => {
         setLoading(true);
-        const response = await axios.get(`http://localhost:8000/current-token-metric?page_number=${page + 1}&page_limit=${rowsPerPage}&search_query=${search}&sort_by=${sortField}`);
+        const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/current-token-metric?page_number=${page + 1}&page_limit=${rowsPerPage}&search_query=${search}&sort_by=${sortField}`);
         const data = response.data;
         setLoading(false);
         setTokens(data.tokens);

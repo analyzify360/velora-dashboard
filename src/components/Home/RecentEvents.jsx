@@ -15,7 +15,7 @@ const RecentEvents = () => {
   const getRecentEvents = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`http://localhost:8000/recent-pool-event?page_limit=10&filter_by=${filter}`);
+      const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/recent-pool-event?page_limit=10&filter_by=${filter}`);
       const data = response.data;
       setEvents(data);
     } catch (error) {
